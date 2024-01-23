@@ -12,5 +12,3 @@ def gradient_descent(train_X, train_Y, alpha = 0.001):
             gradient = (sigmoids - train_Y) * train_X[:, j:j+1]
             gradient = (1 / train_X.shape[0]) * np.sum(gradient)
             thetas[j] -= alpha * gradient
-
-gradient_descent()

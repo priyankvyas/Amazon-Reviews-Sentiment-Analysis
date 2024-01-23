@@ -3,18 +3,16 @@ import numpy as np
 from nltk.corpus import stopwords
 from collections import defaultdict
 
+# Build a vocabulary of distinct words found in the text corpus
 def build_vocab(df):
     vocab = set()
-    labels = np.zeros(len(df.index))
-
     for index, row in df.iterrows():
         df.loc[index, "preprocessedText"] = preprocess.preprocess(str(row["reviewText"]) + " " + str(row["summary"]))
         vocab.update(df.loc[index, "preprocessedText"].split(' '))
-        labels[index] = int(row["label"])
 
     vocab.discard('')
     vocab = vocab - set(stopwords.words('english'))
-    return vocab, labels
+    return vocab
 
 def build_freq_dict(df, vocab):
     freq_dict = defaultdict(int)
@@ -27,10 +25,11 @@ def update_freq(text, label, vocab, freq_dict):
         if word in vocab:
             freq_dict[(word, label)] += 1
 
-def get_vectors(df):
+def get_vectors(df, freq_dict):
     vectors = np.zeros((len(df.index), 3))
     for index, row in df.iterrows():
-        vectors[index] = get_doc_vector(row["preprocessedText"])
+        vectors[index] = get_doc_vector(row["preprocessedText"], freq_dict)
+    return vectors
 
 def get_doc_vector(text, freq_dict):
     vector = np.array([1, 0, 0])
