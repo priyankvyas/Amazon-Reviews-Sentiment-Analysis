@@ -11,7 +11,7 @@ def build_freq_dict(df):
 
 # Get the document vectors for each row of the Pandas DataFrame
 def get_vectors(df, freq_dict):
-    vectors = np.zeros((len(df.index), 3))
+    vectors = np.zeros((len(df.index), 2))
     for index, row in df.iterrows():
         vectors[index] = get_doc_vector(row["preprocessedText"], freq_dict)
     return vectors
@@ -19,8 +19,8 @@ def get_vectors(df, freq_dict):
 # Compose the document vector for a given piece of text based on the frequency
 # of the words' occurrence in texts of each label
 def get_doc_vector(text, freq_dict):
-    vector = np.array([1, 0, 0])
+    vector = np.array([0, 0])
     for word in text.split(' '):
-        vector[1] += freq_dict[(word, '0')]
-        vector[2] += freq_dict[(word, '1')]
+        vector[0] += freq_dict[(word, 0.0)]
+        vector[1] += freq_dict[(word, 1.0)]
     return vector
