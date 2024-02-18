@@ -13,8 +13,9 @@ def start_gradient_descent(train_x, train_y, iterations, alpha=0.01):
         gradient_weight = calculate_gradient_weight(train_x, train_y, pred_l)
         theta = update_theta(alpha, theta, gradient_weight)
         pred_l = [1.0 if pred > 0.5 else 0.0 for pred in pred_l]
-        accuracy = np.mean(pred_l == train_y)
+        accuracy = np.mean(train_y == pred_l)
         print("Epoch {0}: Training accuracy = {1} Loss = {2}".format(i, accuracy, loss))
+    return theta
 
 
 # Calculate the sigmoid of each of the z-values in the list
@@ -41,5 +42,22 @@ def calculate_gradient_weight(x_l, y_l, pred_l):
     return gradient_l
 
 
+# Update the weights of the logistic regression model
 def update_theta(alpha, theta, gradient):
     return theta - alpha * gradient
+
+
+# Make predictions on a given instance or instances using the logistic regression model
+def predict(test_l, theta):
+    bias = 1
+    z_l = np.matmul(theta, test_l.T) + bias
+    pred_l = np.array(calculate_sigmoid(z_l))
+    pred_l = np.array([1.0 if pred > 0.5 else 0.0 for pred in pred_l])
+    return pred_l
+
+
+# Evaluate the results given by the model against the true labels
+def evaluate(true_labels, pred_labels):
+    loss = compute_loss(true_labels, pred_labels)
+    accuracy = np.mean(true_labels == pred_labels)
+    print("Training accuracy = {0} Loss = {1}".format(accuracy, loss))

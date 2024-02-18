@@ -20,10 +20,16 @@ vectors = features.get_vectors(preprocessedDf, freq_dict)
 labels = preprocessedDf["label"].to_numpy()
 
 # Split the data into training and validation sets
-train_X = vectors[: math.floor(df.size * 0.8), :]
+train_X = vectors[: math.floor(df.shape[0] * 0.8), :]
 train_Y = labels[: len(train_X)]
-validation_X = vectors[math.floor(df.size * 0.8):, :]
-validation_Y = labels[len(validation_X):]
+validation_X = vectors[math.floor(df.shape[0] * 0.8):, :]
+validation_Y = labels[len(train_X):]
 
 # Train the logistic regression model using gradient descent
-logistic_regression.start_gradient_descent(train_X, train_Y, iterations=150)
+model_weights = logistic_regression.start_gradient_descent(train_X, train_Y, iterations=150)
+
+# Use the trained model to make predictions on the validation set
+predictions = logistic_regression.predict(validation_X, model_weights)
+
+# Evaluate the predictions made by the model
+logistic_regression.evaluate(validation_Y, predictions)
